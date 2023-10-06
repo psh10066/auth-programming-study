@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<h4>Hello, <span th:text="${name}"></span></h4>
+
+<div th:replace="fragment/namecard :: namecard"></div>
+
+</body>
+</html>

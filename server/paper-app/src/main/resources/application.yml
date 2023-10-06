@@ -1,0 +1,31 @@
+server:
+  port: 9060
+
+spring:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+#  datasource:
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3308/security-demo?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Seoul
+#    username: test
+#    password: "qwer1234!"
+
+  devtools:
+    livereload:
+      enabled: true # thymeleaf live reload
+    restart:
+      enabled: true
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    cache: false
+    check-template-location: true
+    suffix: .html
+
+#  web:
+#    resources:
+#      static-locations:
