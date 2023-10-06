@@ -44,4 +44,27 @@ public class SchoolTest {
         schoolService.updateName(school.getSchoolId(), "테스트2 학교");
         assertEquals("테스트2 학교", schoolRepository.findAll().get(0).getName());
     }
+
+    @DisplayName("3. 지역 목록을 가져온다.")
+    @Test
+    void test_3() {
+        List<String> list = schoolService.cities();
+        assertEquals(1, list.size());
+        assertEquals("서울", list.get(0));
+
+        schoolTestHelper.createSchool("부산 학교", "부산");
+        list = schoolService.cities();
+        assertEquals(2, list.size());
+    }
+
+    @DisplayName("4. 지역으로 학교 목록을 가져온다.")
+    @Test
+    void test_4() {
+        List<School> list = schoolService.findAllByCity("서울");
+        assertEquals(1, list.size());
+
+        schoolTestHelper.createSchool("서울2 학교", "서울");
+        list = schoolService.findAllByCity("서울");
+        assertEquals(2, list.size());
+    }
 }

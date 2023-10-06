@@ -36,4 +36,8 @@ public class SchoolService {
     public List<String> cities() {
         return schoolRepository.getCities();
     }
+
+    public List<School> findAllByCity(String city) {
+        return schoolRepository.findAllByCity(city);
+    }
 }
