@@ -21,20 +21,27 @@ public class SchoolTest {
 
     private SchoolService schoolService;
     private SchoolTestHelper schoolTestHelper;
+    School school;
 
     @BeforeEach
     void before() {
         this.schoolService = new SchoolService(schoolRepository);
         this.schoolTestHelper = new SchoolTestHelper(this.schoolService);
+        school = this.schoolTestHelper.createSchool("테스트 학교", "서울");
     }
 
     @DisplayName("1. 학교를 생성한다.")
     @Test
     void test_1() {
-        School school = this.schoolTestHelper.createSchool("테스트 학교", "서울");
-
         List<School> list = schoolRepository.findAll();
         assertEquals(1, list.size());
         SchoolTestHelper.assertSchool(list.get(0), "테스트 학교", "서울");
+    }
+
+    @DisplayName("2. 학교 이름을 수정한다.")
+    @Test
+    void test_2() {
+        schoolService.updateName(school.getSchoolId(), "테스트2 학교");
+        assertEquals("테스트2 학교", schoolRepository.findAll().get(0).getName());
     }
 }

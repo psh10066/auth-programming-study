@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -22,6 +23,14 @@ public class SchoolService {
         }
         school.setUpdated(LocalDateTime.now());
         return schoolRepository.save(school);
+    }
+
+    public Optional<School> updateName(Long schoolId, String name) {
+        return schoolRepository.findById(schoolId).map(school -> {
+            school.setName(name);
+            schoolRepository.save(school);
+            return school;
+        });
     }
 
     public List<String> cities() {
