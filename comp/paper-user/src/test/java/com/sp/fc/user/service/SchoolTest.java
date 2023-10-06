@@ -2,6 +2,7 @@ package com.sp.fc.user.service;
 
 import com.sp.fc.user.domain.School;
 import com.sp.fc.user.repository.SchoolRepository;
+import com.sp.fc.user.service.helper.SchoolTestHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,24 +20,21 @@ public class SchoolTest {
     private SchoolRepository schoolRepository;
 
     private SchoolService schoolService;
+    private SchoolTestHelper schoolTestHelper;
 
     @BeforeEach
     void before() {
         this.schoolService = new SchoolService(schoolRepository);
+        this.schoolTestHelper = new SchoolTestHelper(this.schoolService);
     }
 
     @DisplayName("1. 학교를 생성한다.")
     @Test
     void test_1() {
-        School school = School.builder()
-            .name("테스트 학교")
-            .city("서울")
-            .build();
-        schoolService.save(school);
+        School school = this.schoolTestHelper.createSchool("테스트 학교", "서울");
 
         List<School> list = schoolRepository.findAll();
         assertEquals(1, list.size());
-        assertEquals("테스트 학교", list.get(0).getName());
-        assertEquals("서울", list.get(0).getCity());
+        SchoolTestHelper.assertSchool(list.get(0), "테스트 학교", "서울");
     }
 }
