@@ -9,6 +9,8 @@ import com.sp.fc.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -156,9 +158,13 @@ public class PaperService {
         return paperRepository.findAllByStudentUserIdAndStateInOrderByCreatedDesc(studentUserId, states);
     }
 
+    @PostAuthorize("returnObject.isEmpty() || returnObject.get().studentUserId == principal.userId")
     @Transactional(readOnly = true)
     public Optional<Paper> findPaper(Long paperId) {
-        return paperRepository.findById(paperId);
+        return paperRepository.findById(paperId).map(paper -> {
+            paper.setUser(userRepository.findById(paper.getStudentUserId()).get());
+            return paper;
+        });
     }
 
 }

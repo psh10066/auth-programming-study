@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,7 +30,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class OnlinePaperSecurityConfig {
 
     private final UserSecurityService userSecurityService;
-    private AuthenticationManager authenticationManager;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -38,13 +37,14 @@ public class OnlinePaperSecurityConfig {
     }
 
     @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
-        return this.authenticationManager;
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+            http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(authenticationProvider());
+        return authenticationManagerBuilder.build();
     }
 
     @Bean
-        // TODO : DaoAuthenticationProvider 로 Bean 등록해야 하는 지 or AuthenticatoinManager 로 등록해야 하는지 확인
     AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
@@ -73,7 +73,13 @@ public class OnlinePaperSecurityConfig {
             .logout(logout -> logout.logoutSuccessUrl("/"))
             .rememberMe(config -> config.rememberMeServices(rememberMeServices()))
             .addFilterAt(filter, UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(exception ->
+                exception
+//                    .accessDeniedPage("/access-denied")
+                    .authenticationEntryPoint(new CustomEntryPoint())
+            )
             .authorizeHttpRequests(config -> config
+                .requestMatchers(new AntPathRequestMatcher("/access-denied")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/schools")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/teachers")).permitAll()
@@ -81,8 +87,8 @@ public class OnlinePaperSecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/error")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/signup/*")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/signUp/*")).permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/student/**")).hasAuthority("ROLE_STUDENT")
-                .requestMatchers(new AntPathRequestMatcher("/teacher/**")).hasAuthority("ROLE_TEACHER")
+                .requestMatchers(new AntPathRequestMatcher("/student/**")).hasAnyAuthority("ROLE_ADMIN", "ROLE_STUDENT")
+                .requestMatchers(new AntPathRequestMatcher("/teacher/**")).hasAnyAuthority("ROLE_ADMIN", "ROLE_TEACHER")
                 .requestMatchers(new AntPathRequestMatcher("/manager/**")).hasAuthority("ROLE_ADMIN")
             );
 

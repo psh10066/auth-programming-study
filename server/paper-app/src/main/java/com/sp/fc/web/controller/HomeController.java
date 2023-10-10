@@ -1,5 +1,6 @@
 package com.sp.fc.web.controller;
 
+import com.sp.fc.user.domain.Authority;
 import com.sp.fc.user.domain.School;
 import com.sp.fc.user.domain.User;
 import com.sp.fc.user.service.SchoolService;
@@ -15,7 +16,6 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -61,6 +61,15 @@ public class HomeController {
         HttpServletRequest request,
         Model model
     ) {
+        if (user != null && user.isEnabled()) {
+            if (user.getAuthorities().contains(Authority.ADMIN_AUTHORITY)) {
+                return "redirect:/manager";
+            } else if (user.getAuthorities().contains(Authority.TEACHER_AUTHORITY)) {
+                return "redirect:/teacher";
+            } else if (user.getAuthorities().contains(Authority.STUDENT_AUTHORITY)) {
+                return "redirect:/student";
+            }
+        }
         if (site == null) { // 세션이 끊어졌거나 로그아웃이 되었을 때 로그인하려고 하면 기존 사이트를 통해 어느 사이트를 접근하려고 하는 지 파악하기 위함
             SavedRequest savedRequest = requestCache.getRequest(request, null);
             if (savedRequest != null) {
@@ -110,5 +119,10 @@ public class HomeController {
             e.printStackTrace();
         }
         return "student";
+    }
+
+    @GetMapping("/access-denied")
+    public String accessDenied() {
+        return "accessDenied";
     }
 }
