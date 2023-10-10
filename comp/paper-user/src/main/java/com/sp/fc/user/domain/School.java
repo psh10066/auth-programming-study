@@ -23,6 +23,12 @@ public class School {
 
     private String city;
 
+    @Transient
+    private Long teacherCount;
+
+    @Transient
+    private Long studentCount;
+
     @Column(updatable = false)
     private LocalDateTime created;
 

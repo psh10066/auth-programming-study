@@ -5,6 +5,7 @@ import com.sp.fc.user.domain.School;
 import com.sp.fc.user.service.SchoolService;
 import com.sp.fc.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,14 +31,26 @@ public class SchoolManageController {
         Model model
     ) {
         model.addAttribute("menu", "school");
-
+        Page<School> schoolList = schoolService.list(pageNum, size);
+        schoolList.getContent().forEach(school -> {
+            school.setTeacherCount(userService.countTeacher(school.getSchoolId()));
+            school.setStudentCount(userService.countStudent(school.getSchoolId()));
+        });
+        model.addAttribute("page", schoolList);
         return "manager/school/list";
     }
 
     @GetMapping("/edit")
-    public String list(@RequestParam(value = "schoolId", required = false) Long schoolId, Model model) {
+    public String list(
+        @RequestParam(value = "schoolId", required = false) Long schoolId,
+        Model model
+    ) {
         model.addAttribute("menu", "school");
-        model.addAttribute("school", School.builder().build());
+        if (schoolId != null) {
+            model.addAttribute("school", schoolService.findSchool(schoolId).get());
+        } else {
+            model.addAttribute("school", School.builder().build());
+        }
         return "manager/school/edit";
     }
 
