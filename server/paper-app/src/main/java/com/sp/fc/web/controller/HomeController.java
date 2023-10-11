@@ -9,6 +9,7 @@ import com.sp.fc.web.controller.vo.UserData;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,10 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
+        model.addAttribute("auth",
+            SecurityContextHolder.getContext().getAuthentication().toString()
+                .replace(" [", "<br/>[").replace("(", "<br/>(").replace(",", ",<br/>").replace(" ", "")
+        );
         return "index";
     }
 
