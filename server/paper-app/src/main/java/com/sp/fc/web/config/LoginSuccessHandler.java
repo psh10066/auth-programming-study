@@ -1,6 +1,5 @@
 package com.sp.fc.web.config;
 
-import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -27,11 +26,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         handle(request, response, requestCache.getRequest(request, response), authentication);
         clearAuthenticationAttributes(request);
-    }
-
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-//        System.out.println("success... 1");
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request) {

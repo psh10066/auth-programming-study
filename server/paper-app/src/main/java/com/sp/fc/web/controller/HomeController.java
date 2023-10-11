@@ -9,10 +9,6 @@ import com.sp.fc.web.controller.vo.UserData;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
-import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +26,6 @@ public class HomeController {
 
     private final SchoolService schoolService;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
-
-    private final RequestCache requestCache = new HttpSessionRequestCache();
 
     @GetMapping("/")
     public String home(Model model) {
@@ -70,11 +63,8 @@ public class HomeController {
                 return "redirect:/student";
             }
         }
-        if (site == null) { // 세션이 끊어졌거나 로그아웃이 되었을 때 로그인하려고 하면 기존 사이트를 통해 어느 사이트를 접근하려고 하는 지 파악하기 위함
-            SavedRequest savedRequest = requestCache.getRequest(request, null);
-            if (savedRequest != null) {
-                site = estimateSite(savedRequest.getRedirectUrl());
-            }
+        if (site == null) {
+            return "redirect:/";
         }
         model.addAttribute("error", error);
         model.addAttribute("site", site);
