@@ -69,7 +69,7 @@ public class PaperService {
     public void answer(Long paperId, Long problemId, int num, String answer) {
         paperRepository.findById(paperId).ifPresentOrElse(paper -> {
             Optional<PaperAnswer> pa = paper.getPaperAnswerList() == null ? Optional.empty() :
-                paper.getPaperAnswerList().stream().filter(a -> a.getId().getNum() == num).findFirst();
+                paper.getPaperAnswerList().stream().filter(a -> a.getNum() == num).findFirst();
             if (pa.isPresent()) {
                 PaperAnswer pAnswer = pa.get();
                 pAnswer.setAnswer(answer);
@@ -78,13 +78,13 @@ public class PaperService {
                 paperAnswerRepository.save(pAnswer);
             } else {
                 PaperAnswer pAnswer = PaperAnswer.builder()
-                    .id(new PaperAnswer.PaperAnswerId(paperId, num))
+                    .paper(paper)
+                    .num(num)
                     .problemId(problemId)
                     .answer(answer)
                     .answered(LocalDateTime.now())
                     .build();
 //                paperAnswerRepository.save(pAnswer);
-                pAnswer.setPaper(paper);
                 if (paper.getPaperAnswerList() == null) paper.setPaperAnswerList(new ArrayList<>());
                 paper.getPaperAnswerList().add(pAnswer);
                 paper.addAnswered();
@@ -105,7 +105,7 @@ public class PaperService {
         paper.setCorrect(0);
         if (paper.getPaperAnswerList() != null) {
             paper.getPaperAnswerList().forEach(answer -> {
-                if (answer.getAnswer() != null && answer.getAnswer().equals(answerSheet.get(answer.getId().getNum()))) {
+                if (answer.getAnswer() != null && answer.getAnswer().equals(answerSheet.get(answer.getNum()))) {
                     answer.setCorrect(true);
                     paper.addCorrect();
                     paperAnswerRepository.save(answer);

@@ -70,7 +70,7 @@ public class Paper {
 
     public Map<Integer, PaperAnswer> answerMap() {
         if (paperAnswerList == null) return new HashMap<>();
-        return paperAnswerList.stream().collect(Collectors.toMap(PaperAnswer::num,
+        return paperAnswerList.stream().collect(Collectors.toMap(PaperAnswer::getNum,
             Function.identity()));
     }
 

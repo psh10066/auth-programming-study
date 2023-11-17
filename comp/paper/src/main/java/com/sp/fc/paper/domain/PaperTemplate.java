@@ -32,7 +32,7 @@ public class PaperTemplate {
     private int total;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(foreignKey = @ForeignKey(name = "paperTemplateId"))
+    @JoinColumn(name = "paperTemplateId")
     private List<Problem> problemList;
 
     private long publishedCount;

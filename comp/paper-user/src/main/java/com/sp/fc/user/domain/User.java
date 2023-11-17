@@ -30,7 +30,7 @@ public class User implements UserDetails {
     private String password;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(foreignKey = @ForeignKey(name = "userId"))
+    @JoinColumn(name = "userId")
     private Set<Authority> authorities;
 
     private String grade;
@@ -39,6 +39,7 @@ public class User implements UserDetails {
     private User teacher;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "schoolId")
     private School school;
 
     private boolean enabled;
