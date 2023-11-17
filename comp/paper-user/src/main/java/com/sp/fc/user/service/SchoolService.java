@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +19,6 @@ public class SchoolService {
     private final SchoolRepository schoolRepository;
 
     public School save(School school) {
-        if (school.getSchoolId() == null) {
-            school.setCreated(LocalDateTime.now());
-        }
-        school.setUpdated(LocalDateTime.now());
         return schoolRepository.save(school);
     }
 

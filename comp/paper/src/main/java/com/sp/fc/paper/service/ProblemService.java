@@ -18,10 +18,6 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
 
     public Problem save(Problem problem) {
-        if (problem.getProblemId() == null) {
-            problem.setCreated(LocalDateTime.now());
-        }
-        problem.setUpdated(LocalDateTime.now());
         return problemRepository.save(problem);
     }
 

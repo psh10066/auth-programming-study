@@ -11,8 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,10 +27,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User save(User user) throws DataIntegrityViolationException {
-        if (user.getUserId() == null) {
-            user.setCreated(LocalDateTime.now());
-        }
-        user.setUpdated(LocalDateTime.now());
         return userRepository.save(user);
     }
 
@@ -58,7 +52,7 @@ public class UserService {
     }
 
     public void updateUsername(Long userId, String userName) {
-        userRepository.updateUserName(userId, userName, LocalDateTime.now());
+        userRepository.updateUserName(userId, userName);
     }
 
     public Optional<User> findByEmail(String email) {
@@ -100,7 +94,6 @@ public class UserService {
             if (user.getSchool().getSchoolId() != user.getTeacher().getSchool().getSchoolId()) {
                 throw new IllegalArgumentException("해당 학교의 선생님이 아닙니다.");
             }
-            save(user);
         });
     }
 

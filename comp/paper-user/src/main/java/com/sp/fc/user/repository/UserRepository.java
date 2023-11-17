@@ -7,15 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying(clearAutomatically = true)
-    @Query("update User set name = ?2, updated = ?3 where userId = ?1")
-    void updateUserName(Long userId, String userName, LocalDateTime update);
+    @Query("update User set name = ?2 where userId = ?1")
+    void updateUserName(Long userId, String userName);
 
     Optional<User> findByEmail(String username);
 

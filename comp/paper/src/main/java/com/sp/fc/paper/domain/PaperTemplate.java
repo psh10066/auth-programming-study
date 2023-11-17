@@ -1,22 +1,20 @@
 package com.sp.fc.paper.domain;
 
+import com.sp.fc.config.TimeEntity;
 import com.sp.fc.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "sp_paper_template")
-public class PaperTemplate {
+public class PaperTemplate extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,10 +36,4 @@ public class PaperTemplate {
     private long publishedCount;
 
     private long completeCount;
-
-    @Column(updatable = false)
-    private LocalDateTime created;
-
-    private LocalDateTime updated;
-
 }

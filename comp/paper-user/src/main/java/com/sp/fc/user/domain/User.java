@@ -1,24 +1,21 @@
 package com.sp.fc.user.domain;
 
+import com.sp.fc.config.TimeEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "sp_user")
-public class User implements UserDetails {
+public class User extends TimeEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,12 +42,6 @@ public class User implements UserDetails {
     private School school;
 
     private boolean enabled;
-
-    @Column(updatable = false)
-    private LocalDateTime created;
-
-    private LocalDateTime updated;
-
 
     @Override
     public String getUsername() {

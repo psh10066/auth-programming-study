@@ -1,11 +1,9 @@
 package com.sp.fc.paper.domain;
 
+import com.sp.fc.config.TimeEntity;
 import com.sp.fc.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -15,12 +13,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "sp_paper")
-public class Paper {
+public class Paper extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +36,6 @@ public class Paper {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "paper")
     private List<PaperAnswer> paperAnswerList;
 
-    private LocalDateTime created;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 

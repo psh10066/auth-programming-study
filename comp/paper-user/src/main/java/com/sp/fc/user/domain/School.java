@@ -1,20 +1,17 @@
 package com.sp.fc.user.domain;
 
+import com.sp.fc.config.TimeEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "sp_school")
-public class School {
+public class School extends TimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long schoolId;
@@ -28,9 +25,4 @@ public class School {
 
     @Transient
     private Long studentCount;
-
-    @Column(updatable = false)
-    private LocalDateTime created;
-
-    private LocalDateTime updated;
 }

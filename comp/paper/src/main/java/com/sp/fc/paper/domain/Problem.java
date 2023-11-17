@@ -1,20 +1,17 @@
 package com.sp.fc.paper.domain;
 
+import com.sp.fc.config.TimeEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
+import lombok.*;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "sp_problem")
-public class Problem {
+public class Problem extends TimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +24,4 @@ public class Problem {
     private String content;
 
     private String answer;
-
-    @Column(updatable = false)
-    private LocalDateTime created;
-
-    private LocalDateTime updated;
-
 }
