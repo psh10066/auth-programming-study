@@ -50,35 +50,11 @@ public class UserService {
     }
 
     public void addAuthority(Long userId, String authority) {
-        userRepository.findById(userId).ifPresent(user -> {
-            Authority newRole = new Authority(user.getUserId(), authority);
-            if (user.getAuthorities() == null) {
-                HashSet<Authority> authorities = new HashSet<>();
-                authorities.add(newRole);
-                user.setAuthorities(authorities);
-                save(user);
-            } else if (!user.getAuthorities().contains(newRole)) {
-                HashSet<Authority> authorities = new HashSet<>();
-                authorities.addAll(user.getAuthorities());
-                authorities.add(newRole);
-                user.setAuthorities(authorities);
-                save(user);
-            }
-        });
+        userRepository.findById(userId).ifPresent(user -> user.addAuthority(authority));
     }
 
     public void removeAuthority(Long userId, String authority) {
-        userRepository.findById(userId).ifPresent(user -> {
-            if (user.getAuthorities() == null) return;
-            Authority targetRole = new Authority(user.getUserId(), authority);
-            if (user.getAuthorities().contains(targetRole)) {
-                user.setAuthorities(
-                    user.getAuthorities().stream().filter(auth -> !auth.equals(targetRole))
-                        .collect(Collectors.toSet())
-                );
-                save(user);
-            }
-        });
+        userRepository.findById(userId).ifPresent(user -> user.removeAuthority(authority));
     }
 
     public void updateUsername(Long userId, String userName) {
